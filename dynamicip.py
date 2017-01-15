@@ -21,9 +21,15 @@ class dynamicip(minqlx.Plugin):
 		self.server_owner = self.get_cvar("qlx_owner")
 
 		servers = self.run_api("servers")
+		old_ip = self.db[MYIP_KEY] if MYIP_KEY in self.db else ""
 		current_ip = self.get_current_ip()
 		for server in servers:
-			if server['ip'] == current_ip and server['port'] == int(self.zmq_port):
+			if ( server['ip'], server['port'] ) == ( old_ip, int(self.zmq_port) ):
+				if current_ip != old_ip:
+					self.set_current_ip( current_ip )
+				self.server_owner = server['owner']
+				break
+			elif ( server['ip'], server['port'] ) == ( current_ip, int(self.zmq_port) ):
 				self.server_owner = server['owner']
 				self.db[MYIP_KEY] = current_ip
 				break
@@ -34,7 +40,12 @@ class dynamicip(minqlx.Plugin):
 		self.logger.info("current_ip: " + current_ip)
 
 	def handle_game_countdown(self):
-		current_ip = self.get_current_ip()
+		@minqlx.thread
+		def f():
+			self.set_current_ip( self.get_current_ip() )
+		f()
+
+	def set_current_ip(self, current_ip):
 		if MYIP_KEY in self.db:
 			if current_ip != self.db[MYIP_KEY]:
 				r = self.run_api("editserver", {
@@ -44,7 +55,7 @@ class dynamicip(minqlx.Plugin):
 					"newPwd1": "",
 					"newPwd2": "",
 					"oldPwd": self.zmq_password,
-					"owner": self.server_owner,
+					"owner": None,
 					"server": self.db[MYIP_KEY] + ":" + self.zmq_port 
 				})
 				if r["ok"] == False:
