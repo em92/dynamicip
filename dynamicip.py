@@ -50,13 +50,13 @@ class dynamicip(minqlx.Plugin):
 			if current_ip != self.db[MYIP_KEY]:
 				r = self.run_api("editserver", {
 					"action": "update",
-					"newAddr": current_ip + ":" + self.zmq_port,
+					"newAddr": current_ip,
 					"newGamePort": "",
 					"newPwd1": "",
 					"newPwd2": "",
 					"oldPwd": self.zmq_password,
 					"owner": None,
-					"server": self.db[MYIP_KEY] + ":" + self.zmq_port 
+					"server": self.db[MYIP_KEY]
 				})
 				if r["ok"] == False:
 					self.logger.warning(r["msg"])
