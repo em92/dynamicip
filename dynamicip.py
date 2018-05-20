@@ -9,7 +9,7 @@ class dynamicip(minqlx.Plugin):
 		super().__init__()
 		self.add_hook("game_countdown", self.handle_game_countdown)
 		
-		self.set_cvar_once("qlx_qlStatsAdminPanel", "qlstats.net:8083")
+		self.set_cvar_once("qlx_qlStatsAdminPanel", "qlstats.net/panel3")
 
 		self.api_url = "http://{}/api/".format(self.get_cvar("qlx_qlStatsAdminPanel"))
 		self.zmq_password = self.get_cvar("zmq_stats_password")
