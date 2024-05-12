@@ -14,9 +14,9 @@ class dynamicip(minqlx.Plugin):
 		self.api_url = "http://{}/api/".format(self.get_cvar("qlx_qlStatsAdminPanel"))
 		self.zmq_password = self.get_cvar("zmq_stats_password")
 		self.zmq_port = self.get_cvar("zmq_stats_port")
-		if (self.zmq_port == ""):
+		if not self.zmq_port:
 			self.zmq_port = self.get_cvar("net_port")
-			if (self.zmq_port == ""):
+			if not self.zmq_port:
 				self.zmq_port = "27960"
 		self.server_owner = self.get_cvar("qlx_owner")
 
@@ -76,7 +76,7 @@ class dynamicip(minqlx.Plugin):
 			self.db[MYIP_KEY] = current_ip
 	
 	def get_current_ip(self):
-		return requests.get("http://ipv4bot.whatismyipaddress.com").text
+		return requests.get("http://ifconfig.me/ip").text
 		
 	def run_api(self, method, params=None):
 		if params == None:
