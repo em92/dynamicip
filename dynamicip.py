@@ -11,7 +11,7 @@ class dynamicip(minqlx.Plugin):
 		
 		self.set_cvar_once("qlx_qlStatsAdminPanel", "qlstats.net/panel3")
 
-		self.api_url = "http://{}/api/".format(self.get_cvar("qlx_qlStatsAdminPanel"))
+		self.api_url = "https://{}/api/".format(self.get_cvar("qlx_qlStatsAdminPanel"))
 		self.zmq_password = self.get_cvar("zmq_stats_password")
 		self.zmq_port = self.get_cvar("zmq_stats_port")
 		if not self.zmq_port:
